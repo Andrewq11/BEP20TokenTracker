@@ -49,7 +49,7 @@ def existingLoad(walletAdd, pPrices):
     purchasePrices = []
     for purchaseP in pPrices:
         purchasePrices.append(purchaseP)
-    print(purchasePrices)
+        
 
     # Calculating PL for tokens w/ non-zero and non-one purchase prices
     pLGain = []
@@ -177,7 +177,7 @@ def tokenAmountScreen():
     
     layout = [[sg.Text('Enter the purchase price of your tokens', font=fnt)],
     [sg.Text('If you do not remember the purchase price for your tokens, input 1\
-        in each box and continue')]
+ in each box and continue')],
     [sg.Frame(layout=layoutPrice, title=''), sg.Frame(layout=inputPrice, title= '')],
     [sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
     ]
