@@ -18,6 +18,19 @@ def tokenNames(driver):
         cleanNames.append(token)
     return cleanNames
 
+def tokenNames_PP(driver, walletAdd):
+    # Gets list of token names in BEP20 wallet and is used to ask user for 
+    # purchase prices in GUI
+    driver.get("https://bscscan.com/tokenholdings?a=" + walletAdd)
+    time.sleep(0.5)
+    table = driver.find_elements_by_xpath('//table[@class="table table-align-middle table-hover"]\
+        //tbody//tr//td//div[@class="media-body"]//a[@class="hash-tag text-truncate font-weight-bold"]')
+    cleanNames = []
+    for token in table:
+        token = token.text
+        cleanNames.append(token)
+    return cleanNames
+
 
 def tokenHoldingAmount(driver, tokenNames):
     # Get token holding amounts for each token in BEP20 wallet excluding BNB.
