@@ -25,7 +25,7 @@ driver = webdriver.Chrome(PATH, options=options,desired_capabilities=\
 
 
 # Input the BEP20 wallet address you want to collect token info on.
-walletAddress = "0xadf589678611e28a4302549d8d6e28ae3c822ecd"
+walletAddress = ""
 driver.get("https://bscscan.com/tokenholdings?a=" + walletAddress)
 time.sleep(0.5)
 
