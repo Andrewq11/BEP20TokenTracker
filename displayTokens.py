@@ -12,7 +12,7 @@ import time
 # Settings for font in GUI and selenium webdriver
 fnt = "Arial 11 underline"
 prox = Proxy()
-prox.http_proxy = ""
+prox.http_proxy = "51.158.123.35:9999"
 capabilities = webdriver.DesiredCapabilities.CHROME
 prox.add_to_capabilities(capabilities)
 
@@ -25,7 +25,7 @@ driver = webdriver.Chrome(PATH, options=options,desired_capabilities=\
 
 
 # Input the BEP20 wallet address you want to collect token info on.
-walletAddress = ""
+walletAddress = "0xadf589678611e28a4302549d8d6e28ae3c822ecd"
 driver.get("https://bscscan.com/tokenholdings?a=" + walletAddress)
 time.sleep(0.5)
 
