@@ -12,7 +12,7 @@ import time
 # Settings for font in GUI and selenium webdriver
 fnt = "Arial 11 underline"
 prox = Proxy()
-prox.http_proxy = "51.158.123.35:9999"
+prox.http_proxy = ""
 capabilities = webdriver.DesiredCapabilities.CHROME
 prox.add_to_capabilities(capabilities)
 
