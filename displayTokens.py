@@ -49,7 +49,7 @@ def existingLoad(walletAdd, pPrices):
     purchasePrices = []
     for purchaseP in pPrices:
         purchasePrices.append(purchaseP)
-        
+
 
     # Calculating PL for tokens w/ non-zero and non-one purchase prices
     pLGain = []
@@ -138,7 +138,6 @@ def inputAddress():
             if check != "":
                 walletAddress = check
                 initialP = pickle.load(infileP)
-                print(initialP)
 
                 lay = existingLoad(walletAddress, initialP)
                 window.close()
