@@ -56,7 +56,8 @@ for amount in tokenAmounts:
 # Add purchase prices manually, calculates P/L and value for tokens that DO NOT 
 # have 0 for purchase price.
 # Put 0 for purchase price if wallet has negligible balance for it and
-# don't want PL or value calculated.
+# don't want PL calculated.
+# Put 1 for purchase price if want value but not PL to be calculated.
 purchasePrices = []
 PurchasePrice0 = 0.000000324
 PurchasePrice1 = 0.00000000673
