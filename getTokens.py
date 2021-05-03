@@ -18,7 +18,7 @@ def tokenNames(driver):
         cleanNames.append(token)
     return cleanNames
 
-
+#goo
 def tokenHoldingAmount(driver, tokenNames):
     # Get token holding amounts for each token in BEP20 wallet excluding BNB.
     # Token amounts begin at columns[11].text & increase by index of 8
