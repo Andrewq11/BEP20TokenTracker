@@ -31,7 +31,7 @@ time.sleep(0.5)
 
 
 # Functions get list of tokens in wallet, amounts of each token, contract 
-# addresses for token, and prices of each token via BoggedFinance
+# addresses for token, and prices of each token via Poocoin
 table = tokenNames(driver)
 tokenAmounts = tokenHoldingAmount(driver, table)
 address = tokenAddresses(driver)
@@ -84,7 +84,7 @@ for p in purchasePrices:
         p = '---'
         pLGain.append(p)
         continue
-    p = ((cleanPrices[i] - p) / p) * 100
+    p = round(((cleanPrices[i] - p) / p) * 100, 2)
     p = str(p) + "%"
     pLGain.append(p)
     i = i + 1
@@ -136,7 +136,7 @@ layout = [
     [sg.Frame(layout=tokenColumn, title=''), sg.Frame(layout=amountColumn, title=''),\
      sg.Frame(layout=priceColumn, title=''), sg.Frame(layout=pLColumn, title=''),
          sg.Frame(layout=valColumn, title='')],
-    [sg.Sizer(508,10), sg.Frame(layout=totColumn, title='')],
+    [sg.Sizer(434,10), sg.Frame(layout=totColumn, title='')],
     [sg.Sizer(375,10), sg.Button("Update Prices", pad=(5,12)), sg.Button("Close", pad=(5,12))]
     ]
 

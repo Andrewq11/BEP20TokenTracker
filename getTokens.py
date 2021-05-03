@@ -33,26 +33,26 @@ def tokenHoldingAmount(driver, tokenNames):
 
 
 def tokenAddresses(driver):
-    # Retrieve token addresses for pulling up BoggedFinance page for each token
+    # Retrieve token addresses for pulling up Poocoin page for each token
     addresses = driver.find_elements_by_xpath('//table[@class="table table-align-middle table-hover"]\
         //tbody//tr//td//div[@class="media-body"]//a[@class="hash-tag text-truncate d-block font-size-1"]')
     return addresses
 
 
 def tokenPrices(driver, addresses):
-    # Use token addresses to loop thru BoggedFinance pages and extract price
+    # Use token addresses to loop thru Poocoin pages and extract price
     links =[]
     for add in addresses:
-        links.append("https://charts.bogged.finance/?token=" + add.text)
+        links.append("https://poocoin.app/tokens/" + add.text)
 
     prices = []
     j = 0
     for link in links:
         driver.get(link)
-        time.sleep(3.8)
-        price = driver.find_element_by_xpath('//h4[@data-balloon-pos="right"]')
+        time.sleep(2)
+        price = driver.find_element_by_xpath('//div[@class="mb-1 d-flex flex-column lh-1"]//span')
         prices.append(price.text)
-
+    
     return prices
 
 
