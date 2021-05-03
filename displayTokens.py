@@ -12,7 +12,7 @@ import time
 # Settings for font in GUI and selenium webdriver
 fnt = "Arial 11 underline"
 prox = Proxy()
-prox.http_proxy = "51.158.123.35:9999"
+prox.http_proxy = ""
 capabilities = webdriver.DesiredCapabilities.CHROME
 prox.add_to_capabilities(capabilities)
 
@@ -25,13 +25,13 @@ driver = webdriver.Chrome(PATH, options=options,desired_capabilities=\
 
 
 # Input the BEP20 wallet address you want to collect token info on.
-walletAddress = "0xadf589678611e28a4302549d8d6e28ae3c822ecd"
+walletAddress = ""
 driver.get("https://bscscan.com/tokenholdings?a=" + walletAddress)
 time.sleep(0.5)
 
 
 # Functions get list of tokens in wallet, amounts of each token, contract 
-# addresses for token, and prices of each token via BoggedFinance
+# addresses for token, and prices of each token via Poocoin
 table = tokenNames(driver)
 tokenAmounts = tokenHoldingAmount(driver, table)
 address = tokenAddresses(driver)
@@ -84,7 +84,7 @@ for p in purchasePrices:
         p = '---'
         pLGain.append(p)
         continue
-    p = ((cleanPrices[i] - p) / p) * 100
+    p = round(((cleanPrices[i] - p) / p) * 100, 2)
     p = str(p) + "%"
     pLGain.append(p)
     i = i + 1
@@ -136,7 +136,7 @@ layout = [
     [sg.Frame(layout=tokenColumn, title=''), sg.Frame(layout=amountColumn, title=''),\
      sg.Frame(layout=priceColumn, title=''), sg.Frame(layout=pLColumn, title=''),
          sg.Frame(layout=valColumn, title='')],
-    [sg.Sizer(508,10), sg.Frame(layout=totColumn, title='')],
+    [sg.Sizer(434,10), sg.Frame(layout=totColumn, title='')],
     [sg.Sizer(375,10), sg.Button("Update Prices", pad=(5,12)), sg.Button("Close", pad=(5,12))]
     ]
 
