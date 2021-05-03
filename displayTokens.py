@@ -8,7 +8,7 @@ from getTokens import tokenNames, tokenHoldingAmount, tokenAddresses, tokenPrice
 import PySimpleGUI as sg
 import time
 
-
+# Hello Andre, you're a goober.
 # Settings for font in GUI and selenium webdriver
 fnt = "Arial 11 underline"
 prox = Proxy()
