@@ -79,7 +79,7 @@ purchasePrices.append(PurchasePrice6)
 pLGain = []
 i = 0
 for p in purchasePrices:
-    if p == 0:
+    if p == 0 or p == 1:
         i = i + 1
         p = '---'
         pLGain.append(p)
