@@ -23,6 +23,7 @@ PATH = "chromedriver.exe"
 driver = webdriver.Chrome(PATH, options=options,desired_capabilities=\
                             capabilities)
 
+<<<<<<< HEAD
 # Input the BEP20 wallet address you want to collect token info on.
 walletAddress = ""
 driver.get("https://bscscan.com/tokenholdings?a=" + walletAddress)
@@ -83,6 +84,47 @@ for p in purchasePrices:
     if p == 0 or p == 1:
         i = i + 1
         p = '---'
+=======
+# Function loads all token data and displays in GUI
+# Takes two arguments being BEP20 wallet address & list of token purchase prices
+def existingLoad(walletAdd, pPrices):
+    driver.get("https://bscscan.com/tokenholdings?a=" + walletAdd)
+    time.sleep(0.5)
+
+    table = tokenNames(driver)
+    tokenAmounts = tokenHoldingAmount(driver, table)
+    address = tokenAddresses(driver)
+    prices = tokenPrices(driver, address)
+
+    cleanPrices = []
+    for price in prices:
+        price = price.replace('$', '')
+        price = float(price)
+        cleanPrices.append(price)
+
+    cleanAmounts = []
+    for amount in tokenAmounts:
+        amount = amount.replace(',', '')
+        amount = float(amount)
+        cleanAmounts.append(amount)
+
+    purchasePrices = []
+    for purchaseP in pPrices:
+        purchasePrices.append(purchaseP)
+
+
+    # Calculating PL for tokens w/ non-zero and non-one purchase prices
+    pLGain = []
+    i = 0
+    for p in purchasePrices:
+        if p == 0 or p == 1:
+            i = i + 1
+            p = '---'
+            pLGain.append(p)
+            continue
+        p = round(((cleanPrices[i] - p) / p) * 100, 2)
+        p = str(p) + "%"
+>>>>>>> origin
         pLGain.append(p)
         i = i + 1 #whats the point of this
 
