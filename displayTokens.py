@@ -124,7 +124,7 @@ def existingLoad(walletAdd, pPrices):
 # If there is no wallet address stored in program from prior use, program will
 # ask for wallet address and proceed to purchasePriceScreen.
 def inputAddress():
-    layout = [[sg.Text('Enter your BEP20 Address')],
+    layout = [[sg.Text('Enter your BEP20 Wallet Address')],
     [sg.InputText()],
     [sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
     ]
