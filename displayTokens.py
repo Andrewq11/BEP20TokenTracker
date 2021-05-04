@@ -23,68 +23,6 @@ PATH = "C:\Program Files (x86)\chromedriver.exe"
 driver = webdriver.Chrome(PATH, options=options,desired_capabilities=\
                             capabilities)
 
-<<<<<<< HEAD
-
-# Input the BEP20 wallet address you want to collect token info on.
-walletAddress = ""
-driver.get("https://bscscan.com/tokenholdings?a=" + walletAddress)
-time.sleep(0.5)
-
-
-# Functions get list of tokens in wallet, amounts of each token, contract 
-# addresses for token, and prices of each token via Poocoin
-table = tokenNames(driver)
-tokenAmounts = tokenHoldingAmount(driver, table)
-address = tokenAddresses(driver)
-prices = tokenPrices(driver, address)
-
-
-# Converts price and token amount string into clean floats for calculations
-cleanPrices = []
-for price in prices:
-    price = price.replace('$', '')
-    price = float(price)
-    cleanPrices.append(price)
-
-cleanAmounts = []
-for amount in tokenAmounts:
-    amount = amount.replace(',', '')
-    amount = float(amount)
-    cleanAmounts.append(amount)
-
-
-# Input price by order of row excluding BNB (2nd row is [0])
-# Add purchase prices manually, calculates P/L and value for tokens that DO NOT 
-# have 0 for purchase price.
-# Put 0 for purchase price if wallet has negligible balance for it and
-# don't want PL calculated.
-# Put 1 for purchase price if want value but not PL to be calculated.
-purchasePrices = []
-PurchasePrice0 = 0.000000324
-PurchasePrice1 = 0.00000000673
-PurchasePrice2 = 0
-PurchasePrice3 = 0.000000145
-PurchasePrice4 = 0.00000006324
-PurchasePrice5 = 0
-PurchasePrice6 = 0
-
-purchasePrices.append(PurchasePrice0)
-purchasePrices.append(PurchasePrice1)
-purchasePrices.append(PurchasePrice2)
-purchasePrices.append(PurchasePrice3)
-purchasePrices.append(PurchasePrice4)
-purchasePrices.append(PurchasePrice5)
-purchasePrices.append(PurchasePrice6)
-
-
-# Calculating PL for tokens with non-zero purchase price
-pLGain = []
-i = 0
-for p in purchasePrices:
-    if p == 0 or p == 1:
-        i = i + 1
-        p = '---'
-=======
 # Function loads all token data and displays in GUI
 # Takes two arguments being BEP20 wallet address & list of token purchase prices
 def existingLoad(walletAdd, pPrices):
@@ -124,7 +62,6 @@ def existingLoad(walletAdd, pPrices):
             continue
         p = round(((cleanPrices[i] - p) / p) * 100, 2)
         p = str(p) + "%"
->>>>>>> local
         pLGain.append(p)
         i = i + 1
 
