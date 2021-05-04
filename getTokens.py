@@ -22,7 +22,7 @@ def tokenNames_PP(driver, walletAdd):
     # Gets list of token names in BEP20 wallet and is used to ask user for 
     # purchase prices in GUI
     driver.get("https://bscscan.com/tokenholdings?a=" + walletAdd)
-    time.sleep(0.5)
+    time.sleep(0.5) #change to when page finished loading
     table = driver.find_elements_by_xpath('//table[@class="table table-align-middle table-hover"]\
         //tbody//tr//td//div[@class="media-body"]//a[@class="hash-tag text-truncate font-weight-bold"]')
     cleanNames = []
@@ -38,10 +38,10 @@ def tokenHoldingAmount(driver, tokenNames):
     columns = driver.find_elements_by_xpath('//table[@class="table table-align-middle table-hover"]\
         //tbody//tr//td')
     tokenAmounts = []
-    i = 11
+    i = 11 # have to change the way this works 
     for token in tokenNames:
         tokenAmounts.append(columns[i].text)
-        i = i + 8
+        i = i + 8 
     return tokenAmounts
 
 
@@ -59,12 +59,12 @@ def tokenPrices(driver, addresses):
         links.append("https://poocoin.app/tokens/" + add.text)
 
     prices = []
-    j = 0
+
     for link in links:
         driver.get(link)
-        time.sleep(2)
+        time.sleep(2) #change this to when page has finished loading
         price = driver.find_element_by_xpath('//div[@class="mb-1 d-flex flex-column lh-1"]//span')
-        prices.append(price.text)
+        prices.append(price.text) #this will give only static list, might keep appending list if same instance of function is used?
     
     return prices
 

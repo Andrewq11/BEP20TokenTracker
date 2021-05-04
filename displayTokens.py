@@ -19,11 +19,9 @@ prox.add_to_capabilities(capabilities)
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
 options.add_argument("--log-level=3")
-PATH = "C:\Program Files (x86)\chromedriver.exe"
+PATH = "chromedriver.exe"
 driver = webdriver.Chrome(PATH, options=options,desired_capabilities=\
                             capabilities)
-
-<<<<<<< HEAD
 
 # Input the BEP20 wallet address you want to collect token info on.
 walletAddress = ""
@@ -67,7 +65,8 @@ PurchasePrice3 = 0.000000145
 PurchasePrice4 = 0.00000006324
 PurchasePrice5 = 0
 PurchasePrice6 = 0
-
+#must change this whole mess to just a for loop
+#that appends purchasePrice[]
 purchasePrices.append(PurchasePrice0)
 purchasePrices.append(PurchasePrice1)
 purchasePrices.append(PurchasePrice2)
@@ -82,51 +81,10 @@ pLGain = []
 i = 0
 for p in purchasePrices:
     if p == 0 or p == 1:
-        i = i + 1
+        i = i + 1 #why
         p = '---'
-=======
-# Function loads all token data and displays in GUI
-# Takes two arguments being BEP20 wallet address & list of token purchase prices
-def existingLoad(walletAdd, pPrices):
-    driver.get("https://bscscan.com/tokenholdings?a=" + walletAdd)
-    time.sleep(0.5)
-
-    table = tokenNames(driver)
-    tokenAmounts = tokenHoldingAmount(driver, table)
-    address = tokenAddresses(driver)
-    prices = tokenPrices(driver, address)
-
-    cleanPrices = []
-    for price in prices:
-        price = price.replace('$', '')
-        price = float(price)
-        cleanPrices.append(price)
-
-    cleanAmounts = []
-    for amount in tokenAmounts:
-        amount = amount.replace(',', '')
-        amount = float(amount)
-        cleanAmounts.append(amount)
-
-    purchasePrices = []
-    for purchaseP in pPrices:
-        purchasePrices.append(purchaseP)
-
-
-    # Calculating PL for tokens w/ non-zero and non-one purchase prices
-    pLGain = []
-    i = 0
-    for p in purchasePrices:
-        if p == 0 or p == 1:
-            i = i + 1
-            p = '---'
-            pLGain.append(p)
-            continue
-        p = round(((cleanPrices[i] - p) / p) * 100, 2)
-        p = str(p) + "%"
->>>>>>> local
         pLGain.append(p)
-        i = i + 1
+        i = i + 1 #whats the point of this
 
     # Calculating value of token holding for non-zero purchase prices
     values = []
