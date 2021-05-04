@@ -81,7 +81,7 @@ pLGain = []
 i = 0
 for p in purchasePrices:
     if p == 0 or p == 1:
-        i = i + 1 #why
+        i = i + 1
         p = '---'
         pLGain.append(p)
         i = i + 1 #whats the point of this
