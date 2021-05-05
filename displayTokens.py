@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from getTokens import tokenNames, tokenHoldingAmount, tokenAddresses, tokenPrices, tokenNames_PP
+from getTokens import tokenNames, tokenHoldingAmount, tokenAddresses, tokenPrices, tokenNames_PP, existingLoad
 import PySimpleGUI as sg
 import pickle
 import time
@@ -23,100 +23,6 @@ PATH = "C:\Program Files (x86)\chromedriver.exe"
 driver = webdriver.Chrome(PATH, options=options,desired_capabilities=\
                             capabilities)
 
-# Function loads all token data and displays in GUI
-# Takes two arguments being BEP20 wallet address & list of token purchase prices
-def existingLoad(walletAdd, pPrices):
-    driver.get("https://bscscan.com/tokenholdings?a=" + walletAdd)
-    time.sleep(0.5)
-
-    table = tokenNames(driver)
-    tokenAmounts = tokenHoldingAmount(driver, table)
-    address = tokenAddresses(driver)
-    prices = tokenPrices(driver, address)
-
-    cleanPrices = []
-    for price in prices:
-        price = price.replace('$', '')
-        price = float(price)
-        cleanPrices.append(price)
-
-    cleanAmounts = []
-    for amount in tokenAmounts:
-        amount = amount.replace(',', '')
-        amount = float(amount)
-        cleanAmounts.append(amount)
-
-    purchasePrices = []
-    for purchaseP in pPrices:
-        purchasePrices.append(purchaseP)
-
-
-    # Calculating PL for tokens w/ non-zero and non-one purchase prices
-    pLGain = []
-    i = 0
-    for p in purchasePrices:
-        if p == 0 or p == 1:
-            i = i + 1
-            p = '---'
-            pLGain.append(p)
-            continue
-        p = round(((cleanPrices[i] - p) / p) * 100, 2)
-        p = str(p) + "%"
-        pLGain.append(p)
-        i = i + 1
-
-    # Calculating value of token holding for non-zero purchase prices
-    values = []
-    totalVals = []
-    i = 0
-    for v in purchasePrices:
-        if purchasePrices[i] == 0:
-            i = i + 1
-            val = '---'
-            values.append(val)
-            continue
-        val = round(cleanPrices[i] * cleanAmounts[i], 2)
-        totalVals.append(val)
-        val = "$" + str(val)
-        values.append(val)
-        i = i + 1
-    totalValue = round(sum(totalVals), 2)
-
-
-    # Generating columns for the GUI
-    tokenColumn = [[sg.Text("Token", font=fnt)]]
-    for token in table:
-        tokenColumn.append([sg.Text(token)])
-
-    amountColumn = [[sg.Text("Amount", font=fnt)]]
-    for amount in tokenAmounts:
-        amountColumn.append([sg.Text(amount)])
-
-    priceColumn = [[sg.Text("Price", font=fnt)]]
-    for price in cleanPrices:
-        priceColumn.append([sg.Text(price)])
-
-    pLColumn = [[sg.Text("P/L", font=fnt)]]
-    for pl in pLGain:
-        pLColumn.append([sg.Text(pl)])
-
-    valColumn = [[sg.Text("Value (USD)", font=fnt)]]
-    for val in values:
-        valColumn.append([sg.Text(val)])
-
-    totColumn = [[sg.Text("= $" + str(totalValue))]]
-
-    # Layout for GUI w/ each column
-    layout = [
-    [sg.Frame(layout=tokenColumn, title=''), sg.Frame(layout=amountColumn, title=''),\
-    sg.Frame(layout=priceColumn, title=''), sg.Frame(layout=pLColumn, title=''),
-        sg.Frame(layout=valColumn, title='')],
-    [sg.Sizer(434,10), sg.Frame(layout=totColumn, title='')],
-    [sg.Sizer(375,10), sg.Button("Update Prices", pad=(5,12)), sg.Button("Close", pad=(5,12))]
-    ]
-
-    return layout
-
 
 # Function which starts program. Will first check if program has a wallet 
 # address stored and if does, will then check for purchase prices of each token
@@ -125,21 +31,91 @@ def existingLoad(walletAdd, pPrices):
 # ask for wallet address and proceed to purchasePriceScreen.
 def inputAddress():
     layout = [[sg.Text('Enter your BEP20 Wallet Address')],
-    [sg.InputText()],
-    [sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
+    [sg.InputText(size=(42,20))],
+    [sg.Sizer(185,0), sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
     ]
 
-    window = sg.Window("Defi Token Tracker", layout, margins=(100,100), icon=r"C:\Users\andre\Downloads\favicon.ico")
+    window = sg.Window("BEP20 Token Tracker", layout, margins=(50,50), icon=r"C:\Users\andre\Downloads\favicon.ico")
     while True: 
         try:
             infile = open("localInfo.pickle", "rb")
             infileP = open("pPrices.pickle", "rb")
             check = pickle.load(infile)
+            infile.close()
+            initialP = pickle.load(infileP)
+            print("Purchase prices:")
+            print(initialP)
+            infileP.close()
+            if initialP == '':
+                raise EOFError
+
+            walletAddress = check
+            lay = existingLoad(driver, walletAddress, initialP)
+            window.close()
+            mainScreen(lay)
+            break
+        except EOFError:
+            event, values = window.read()
+            if event == sg.WIN_CLOSED or event == "Close":
+                break
+            elif event == "Continue":
+                outfile = open("localInfo.pickle", 'wb')
+                pickle.dump(values[0], outfile)
+                outfile.close()
+
+                walletAddress = values[0].strip()
+                window.close()
+                tokenAmountScreen()
+                break
+    window.close()
+
+
+# If the user decides to go back to the address screen to input a new address,
+# this function will run
+def backInputAddress():
+    layout = [[sg.Text('Enter your BEP20 Wallet Address')],
+    [sg.InputText(size=(42,20))],
+    [sg.Sizer(185,0), sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
+    ]
+
+    window = sg.Window("BEP20 Token Tracker", layout, margins=(50,50), icon=r"C:\Users\andre\Downloads\favicon.ico")
+    while True: 
+            event, values = window.read()
+            if event == sg.WIN_CLOSED or event == "Close":
+                break
+            elif event == "Continue":
+                outfile = open("localInfo.pickle", 'wb')
+                pickle.dump(values[0], outfile)
+                outfile.close()
+
+                walletAddress = values[0].strip()
+                window.close()
+                tokenAmountScreen()
+                break
+    window.close()
+
+
+# If user enters an invalid wallet address, this screen will prompt them to retry
+def reInputAddress():
+    layout = [[sg.Text('Re-enter your BEP20 Wallet Address', font=fnt)],
+    [sg.Text('Invalid wallet address! Please try again.')],
+    [sg.InputText(size=(42,20))],
+    [sg.Sizer(185,0),sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
+    ]
+
+    window = sg.Window("BEP20 Token Tracker", layout, margins=(50,50), icon=r"C:\Users\andre\Downloads\favicon.ico")
+    while True: 
+        try:
+            infile = open("localInfo.pickle", "rb")
+            infileP = open("pPrices.pickle", "rb")
+            check = pickle.load(infile)
+            infile.close()
             if check != "":
                 walletAddress = check
                 initialP = pickle.load(infileP)
+                infileP.close()
 
-                lay = existingLoad(walletAddress, initialP)
+                lay = existingLoad(driver, walletAddress, initialP)
                 window.close()
                 mainScreen(lay)
                 break
@@ -152,7 +128,7 @@ def inputAddress():
                 pickle.dump(values[0], outfile)
                 outfile.close()
 
-                walletAddress = values[0]
+                walletAddress = values[0].strip()
                 window.close()
                 tokenAmountScreen()
                 break
@@ -167,22 +143,43 @@ def tokenAmountScreen():
     check = pickle.load(infile)
     walletAddress = check
 
+    infileP = open("pPrices.pickle", "rb")
+    
+    try:
+        initialP = pickle.load(infileP)
+    except EOFError:
+        initialP = []
+        print('eoferror')
+
     layoutPrice = []
     inputPrice = []
     table = tokenNames_PP(driver, walletAddress)
-    for token in table:
-        layoutPrice.append([sg.Text(token)])
-        inputPrice.append([sg.Input()])
+    print(table)
     
-    layout = [[sg.Text('Enter the purchase price of your tokens', font=fnt)],
-    [sg.Text('If you do not remember the purchase price for your tokens, input 1\
- in each box and continue')],
-    [sg.Frame(layout=layoutPrice, title=''), sg.Frame(layout=inputPrice, title= '')],
-    [sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
+    i = 0
+    for token in table:
+        if initialP == [] or initialP == '':
+            layoutPrice.append([sg.Text(token, justification='center')])
+            inputPrice.append([sg.Input(size=(14,15))])
+
+        elif initialP != []:
+            layoutPrice.append([sg.Text(token, justification='center')])
+            inputPrice.append([sg.Input(initialP[i], size=(14,15))])
+            i = i + 1
+ 
+    
+    layout = [[sg.Text('Enter the purchase price or average price of your tokens', font=fnt, justification='center')],
+    [sg.Sizer(12,0), sg.Text("If you don't remember, please input 1 instead and continue", justification='center')],
+    [sg.Sizer(65,20), sg.Frame(layout=layoutPrice, title=''), sg.Frame(layout=inputPrice, title= '')],
+    [sg.Button('Back', pad=(5,12)), sg.Sizer(220,0), sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
     ]
     
-    window = sg.Window("Defi Token Tracker", layout, margins=(100,100), icon=r"C:\Users\andre\Downloads\favicon.ico")
+    window = sg.Window("BEP20 Token Tracker", layout, margins=(50,50), icon=r"C:\Users\andre\Downloads\favicon.ico")
     while True: 
+        if table == []:
+            window.close()
+            reInputAddress()
+            break
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == "Close":
             break
@@ -197,24 +194,35 @@ def tokenAmountScreen():
             pickle.dump(listOfPPrices, outfile)
             outfile.close()
 
-            lay = existingLoad(walletAddress, listOfPPrices)
+            lay = existingLoad(driver, walletAddress, listOfPPrices)
             window.close()
             mainScreen(lay)
+            break
+        elif event == 'Back':
+            window.close()
+            outfile = open("pPrices.pickle", 'wb')
+            pickle.dump('', outfile)
+            outfile.close()
+            backInputAddress()
+            break
     window.close()
 
 
 # Displays BEP20 wallet address holding and related info.
 # Takes layout argument which is created in the existingLoad() function
 def mainScreen(layout):
-    window = sg.Window("Defi Token Tracker", layout, margins=(100,100), icon=r"C:\Users\andre\Downloads\favicon.ico")
+    window = sg.Window("BEP20 Token Tracker", layout, margins=(50,50), icon=r"C:\Users\andre\Downloads\favicon.ico")
     while True: 
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == "Close":
             break
+        elif event == 'Back':
+            window.close()
+            tokenAmountScreen()
+            break
+        
     window.close()
 
-
-inputAddress()
 
 
 
