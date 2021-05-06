@@ -66,7 +66,7 @@ def tokenPrices(driver, addresses):
     j = 0
     for link in links:
         driver.get(link)
-        time.sleep(1.2)
+        time.sleep(1.4)
         price = driver.find_element_by_xpath('//div[@class="mb-1 d-flex flex-column lh-1"]//span')
         prices.append(price.text)
     
@@ -89,6 +89,8 @@ def existingLoad(driver, walletAdd, pPrices):
     cleanPrices = []
     for price in prices:
         price = price.replace('$', '')
+        price = price.replace(',', '')
+        print(price)
         price = float(price)
         cleanPrices.append(price)
 

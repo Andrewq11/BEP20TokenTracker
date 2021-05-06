@@ -105,21 +105,6 @@ def reInputAddress():
 
     window = sg.Window("BEP20 Token Tracker", layout, margins=(50,50), icon=r"C:\Users\andre\Downloads\favicon.ico")
     while True: 
-        try:
-            infile = open("localInfo.pickle", "rb")
-            infileP = open("pPrices.pickle", "rb")
-            check = pickle.load(infile)
-            infile.close()
-            if check != "":
-                walletAddress = check
-                initialP = pickle.load(infileP)
-                infileP.close()
-
-                lay = existingLoad(driver, walletAddress, initialP)
-                window.close()
-                mainScreen(lay)
-                break
-        except EOFError:
             event, values = window.read()
             if event == sg.WIN_CLOSED or event == "Close":
                 break
@@ -189,6 +174,7 @@ def tokenAmountScreen():
             i = 0
             while i < len(values):
                 values[i] = float(values[i])
+                print(values[i])
                 listOfPPrices.append(values[i])
                 i = i + 1
             pickle.dump(listOfPPrices, outfile)
