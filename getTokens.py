@@ -131,10 +131,12 @@ def existingLoad(driver, walletAdd, pPrices):
             continue
         val = round(cleanPrices[i] * cleanAmounts[i], 2)
         totalVals.append(val)
+        val = "{:,}".format(val)
         val = "$" + str(val)
         values.append(val)
         i = i + 1
     totalValue = round(sum(totalVals), 2)
+    totalValue = "{:,}".format(totalValue)
 
 
     # Generating columns for the GUI
@@ -162,10 +164,11 @@ def existingLoad(driver, walletAdd, pPrices):
 
     # Layout for GUI w/ each column
     layout = [
+    [sg.Text('Wallet Address: ' + walletAdd, pad=(10,10))],    
     [sg.Frame(layout=tokenColumn, title=''), sg.Frame(layout=amountColumn, title=''),\
     sg.Frame(layout=priceColumn, title=''), sg.Frame(layout=pLColumn, title=''),
         sg.Frame(layout=valColumn, title='')],
-    [sg.Sizer(434,10), sg.Frame(layout=totColumn, title='')],
+    [sg.Sizer(402,10), sg.Frame(layout=totColumn, title='')],
     [sg.Button('Back', pad=(5,12)), sg.Sizer(323,10), sg.Button("Update Prices", pad=(5,12)),\
          sg.Button("Close", pad=(5,12))]
     ]

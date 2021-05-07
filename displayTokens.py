@@ -32,6 +32,7 @@ driver = webdriver.Chrome(PATH, options=options,desired_capabilities=\
 def inputAddress():
     layout = [[sg.Text('Enter your BEP20 Wallet Address')],
     [sg.InputText(size=(42,20))],
+    [sg.Checkbox("Don't input purchase prices", key='-enterPrice-')],
     [sg.Sizer(185,0), sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
     ]
 
@@ -62,10 +63,12 @@ def inputAddress():
                 outfile = open("localInfo.pickle", 'wb')
                 pickle.dump(values[0], outfile)
                 outfile.close()
-
                 walletAddress = values[0].strip()
+                checkbox_Status = 0
+                if values['-enterPrice-'] == True:
+                    checkbox_Status = 1
                 window.close()
-                tokenAmountScreen()
+                tokenAmountScreen(checkbox_Status)
                 break
     window.close()
 
@@ -75,6 +78,7 @@ def inputAddress():
 def backInputAddress():
     layout = [[sg.Text('Enter your BEP20 Wallet Address')],
     [sg.InputText(size=(42,20))],
+    [sg.Checkbox("Don't input purchase prices", key='-enterPrice-')],
     [sg.Sizer(185,0), sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
     ]
 
@@ -87,10 +91,13 @@ def backInputAddress():
                 outfile = open("localInfo.pickle", 'wb')
                 pickle.dump(values[0], outfile)
                 outfile.close()
+                checkbox_Status = 0
+                if values['-enterPrice-'] == True:
+                    checkbox_Status = 1
 
                 walletAddress = values[0].strip()
                 window.close()
-                tokenAmountScreen()
+                tokenAmountScreen(checkbox_Status)
                 break
     window.close()
 
@@ -100,6 +107,7 @@ def reInputAddress():
     layout = [[sg.Text('Re-enter your BEP20 Wallet Address', font=fnt)],
     [sg.Text('Invalid wallet address! Please try again.')],
     [sg.InputText(size=(42,20))],
+    [sg.Checkbox("Don't input purchase prices", key='-enterPrice-')],
     [sg.Sizer(185,0),sg.Button('Continue'), sg.Button("Close", pad=(5,12))]
     ]
 
@@ -112,10 +120,13 @@ def reInputAddress():
                 outfile = open("localInfo.pickle", 'wb')
                 pickle.dump(values[0], outfile)
                 outfile.close()
+                checkbox_Status = 0
+                if values['-enterPrice-'] == True:
+                    checkbox_Status = 1
 
                 walletAddress = values[0].strip()
                 window.close()
-                tokenAmountScreen()
+                tokenAmountScreen(checkbox_Status)
                 break
     window.close()
 
@@ -123,13 +134,12 @@ def reInputAddress():
 # If program has not been run before, ask the user for purchase prices of each
 # token. Once user presses 'continue', program will gather token data via the
 # existingLoad() function and proceed to mainScreen().
-def tokenAmountScreen():
+def tokenAmountScreen(checkboxStatus):
     infile = open("localInfo.pickle", "rb")
     check = pickle.load(infile)
     walletAddress = check
 
     infileP = open("pPrices.pickle", "rb")
-    
     try:
         initialP = pickle.load(infileP)
     except EOFError:
@@ -138,12 +148,17 @@ def tokenAmountScreen():
 
     layoutPrice = []
     inputPrice = []
+    checkboxState = []
     table = tokenNames_PP(driver, walletAddress)
-    print(table)
     
     i = 0
     for token in table:
-        if initialP == [] or initialP == '':
+        if checkboxStatus == 1:
+            layoutPrice.append([sg.Text(token, justification='center')])
+            inputPrice.append([sg.Input(1, size=(14,15))])
+            checkboxState.append(1)
+
+        elif initialP == [] or initialP == '':
             layoutPrice.append([sg.Text(token, justification='center')])
             inputPrice.append([sg.Input(size=(14,15))])
 
@@ -164,6 +179,25 @@ def tokenAmountScreen():
         if table == []:
             window.close()
             reInputAddress()
+            break
+        elif checkboxState == []:
+            checkboxState = []
+        elif checkboxState[0] == 1:
+            print(checkboxState[0])
+            outfile = open("pPrices.pickle", 'wb')
+            listOfPPrices = []
+            i = 0
+            while i < len(checkboxState):
+                checkboxState[i] = float(checkboxState[i])
+                print(checkboxState[i])
+                listOfPPrices.append(checkboxState[i])
+                i = i + 1
+            pickle.dump(listOfPPrices, outfile)
+            outfile.close()
+
+            lay = existingLoad(driver, walletAddress, listOfPPrices)
+            window.close()
+            mainScreen(lay)
             break
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == "Close":
@@ -204,7 +238,8 @@ def mainScreen(layout):
             break
         elif event == 'Back':
             window.close()
-            tokenAmountScreen()
+            checkboxStatus = [0]
+            tokenAmountScreen(checkboxStatus)
             break
         
     window.close()
