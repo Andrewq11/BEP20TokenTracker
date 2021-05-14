@@ -141,24 +141,51 @@ def existingLoad(driver, walletAdd, pPrices):
 
     # Generating columns for the GUI
     tokenColumn = [[sg.Text("Token", font=fnt)]]
+    i = 0
     for token in table:
-        tokenColumn.append([sg.Text(token)])
+        if totalVals[i] >= 25:
+            tokenColumn.append([sg.Text(token)])
+            i = i + 1
+            print('added')
+        else:
+            i = i + 1
+            print('skipped')
 
+    i = 0
     amountColumn = [[sg.Text("Amount", font=fnt)]]
     for amount in tokenAmounts:
-        amountColumn.append([sg.Text(amount)])
+        if totalVals[i] >= 25:
+            amountColumn.append([sg.Text(amount)])
+            i = i + 1
+        else: 
+            i = i + 1
 
+    i = 0
     priceColumn = [[sg.Text("Price", font=fnt)]]
     for price in cleanPrices:
-        priceColumn.append([sg.Text(price)])
+        if totalVals[i] >= 25:
+            priceColumn.append([sg.Text(price)])
+            i = i + 1
+        else: 
+            i = i + 1
 
+    i = 0
     pLColumn = [[sg.Text("P/L", font=fnt)]]
     for pl in pLGain:
-        pLColumn.append([sg.Text(pl)])
+        if totalVals[i] >= 25:
+            pLColumn.append([sg.Text(pl)])
+            i = i + 1
+        else:
+            i = i + 1
 
+    i = 0
     valColumn = [[sg.Text("Value (USD)", font=fnt)]]
     for val in values:
-        valColumn.append([sg.Text(val)])
+        if totalVals[i] >= 25:
+            valColumn.append([sg.Text(val)])
+            i = i + 1
+        else:
+            i = i + 1
 
     totColumn = [[sg.Text("= $" + str(totalValue))]]
 
