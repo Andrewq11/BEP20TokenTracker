@@ -17,7 +17,7 @@ capabilities = webdriver.DesiredCapabilities.CHROME
 prox.add_to_capabilities(capabilities)
 
 options = webdriver.ChromeOptions()
-options.add_argument('headless')
+#options.add_argument('headless')
 options.add_argument("--log-level=3")
 PATH = "chromedriver.exe"
 driver = webdriver.Chrome(PATH, options=options,desired_capabilities=\
