@@ -7,7 +7,7 @@ address and the initial purchase prices (or average price) for all of your token
 holdings. Then, a window will be generated which displays each of your BEP20
 token holdings and related info (current price, holding amount, PL %, value).
 
-Once you run the program once and input your wallet address and initial purchase
+Once you run the program and input your wallet address and initial purchase
 prices, these values will be stored in a pickle file which the program will
 use on successive runs so you do not need to add this information again. 
 
