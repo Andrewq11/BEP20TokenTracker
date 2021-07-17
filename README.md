@@ -1,5 +1,5 @@
 # BEP20TokenTracker
-This program uses Selenium and PySimpleGUI to gather token holdings and related 
+This program uses the Selenium and PySimpleGUI libraries to gather token holdings and related 
 info for any BEP20 address. 
 
 When this program is first run, you are prompted to input your BEP20 wallet 
